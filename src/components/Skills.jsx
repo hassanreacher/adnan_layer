@@ -1,6 +1,8 @@
 // import content
 import { createElement, useState } from "react";
-import { content } from "../Content";
+import { content as staticContent } from "../Content";
+import { useContent } from "../context/ContentContext";
+import { useLanguage } from "../context/LanguageContext";
 // import modal package
 import Modal from "react-modal";
 
@@ -27,9 +29,29 @@ const customStyles = {
 Modal.setAppElement("#root");
 
 const Skills = () => {
-  const { skills } = content;
+  const { content: dbContent, loading } = useContent();
+  const { t } = useLanguage();
+
   const [modalIsOpen, setIsOpen] = useState(false);
   const [selectSkill, setSelectSkill] = useState(null);
+
+  if (loading) {
+    return (
+      <section className="min-h-fit bg-bg_light_primary" id="skills">
+        <div className="md:container px-5 py-14 animate-pulse">
+          <div className="h-10 bg-slate-200 rounded-lg w-40 mb-4 mx-auto md:mx-0"></div>
+          <div className="h-6 bg-slate-200 rounded-lg w-1/3 mb-10 mx-auto md:mx-0"></div>
+          <div className="flex flex-wrap gap-4 justify-center">
+            {[1, 2, 3, 4, 5, 6].map(i => (
+              <div key={i} className="w-full max-w-sm h-32 bg-slate-200 rounded-xl"></div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  const skills = dbContent?.skills || staticContent.skills;
 
   function openModal() {
     setIsOpen(true);
@@ -53,20 +75,16 @@ const Skills = () => {
         </div>
         <br />
         <ul className="list-decimal px-4 font-Inter sm:text-sm text-xs !leading-7">
-          <li>Thorough case analysis and legal research</li>
-          <li>Strategic litigation planning and execution</li>
-          <li>Client-centered approach with clear communication</li>
-          <li>
-            Experienced negotiation and settlement expertise
-          </li>
-          <li>
-            Proven track record of successful outcomes in complex legal matters
-          </li>
+          <li>{t('skillBullet1')}</li>
+          <li>{t('skillBullet2')}</li>
+          <li>{t('skillBullet3')}</li>
+          <li>{t('skillBullet4')}</li>
+          <li>{t('skillBullet5')}</li>
         </ul>
         <br />
         <div className="flex justify-end">
           <button onClick={closeModal} className="btn hover:bg-dark_primary hover:text-white transition-all duration-300">
-            Close
+            {t('close')}
           </button>
         </div>
       </Modal>
@@ -81,12 +99,16 @@ const Skills = () => {
         </h4>
         <br />
         <div className="flex flex-wrap gap-4 justify-center">
-          {skills.skills_content.map((skill, i) => (
+          {skills.skills_content?.map((skill, i) => (
             <div
               key={i}
               data-aos="fade-up"
               data-aos-duration="1000"
               data-aos-delay={i * 150}
+              onClick={() => {
+                setSelectSkill(skill);
+                openModal();
+              }}
               className="bg-white sm:cursor-pointer 
                relative group w-full flex items-center
                 gap-5 p-5 max-w-sm rounded-xl border-2 border-slate-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
@@ -101,15 +123,6 @@ const Skills = () => {
               <div>
                 <h6>{skill.name}</h6>
                 <p className="italic text-sm">{skill.para}</p>
-                <div
-                  onClick={() => {
-                    setSelectSkill(skill);
-                    openModal();
-                  }}
-                  className="text-xl absolute top-3 right-3 hover:scale-125 transition-transform duration-300"
-                >
-                  {createElement(skills.icon)}
-                </div>
               </div>
             </div>
           ))}

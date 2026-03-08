@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, createElement } from "react";
 import { content } from "../Content";
-import { createElement } from "react";
+import { useLanguage } from "../context/LanguageContext";
 
 const Navbar = () => {
   const { nav } = content;
+  const { language, toggleLanguage } = useLanguage();
   const [active, setActive] = useState(0);
 
   useEffect(() => {
@@ -32,6 +33,14 @@ const Navbar = () => {
 
   return (
     <div className="w-full flex justify-center">
+      {/* Language Switcher Floating Top Button */}
+      <button
+        onClick={toggleLanguage}
+        className="fixed top-5 right-5 md:top-8 md:right-8 z-[999] flex items-center justify-center w-12 h-12 bg-white/80 backdrop-blur-md rounded-full shadow-lg text-dark_primary font-bold hover:bg-dark_primary hover:text-white transition-all duration-300 border border-slate-200"
+      >
+        {language === 'en' ? 'AR' : 'EN'}
+      </button>
+
       <nav
         className="fixed bottom-10 z-[999] flex items-center gap-5 bg-slate-200/60 px-6 py-3 backdrop-blur-md rounded-full text-dark_primary duration-300"
       >

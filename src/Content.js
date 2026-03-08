@@ -13,6 +13,7 @@ import { TbSmartHome } from "react-icons/tb";
 import { BiUser } from "react-icons/bi";
 import { RiServiceLine } from "react-icons/ri";
 import { MdOutlinePermContactCalendar, MdLocationOn } from "react-icons/md";
+import { SlEvent } from "react-icons/sl";
 
 export const content = {
   nav: [
@@ -27,6 +28,10 @@ export const content = {
     {
       link: "#services",
       icon: RiServiceLine,
+    },
+    {
+      link: "#events",
+      icon: SlEvent,
     },
     {
       link: "#location",
